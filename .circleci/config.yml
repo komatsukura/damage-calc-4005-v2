@@ -10,21 +10,12 @@ jobs:
       - checkout
       - run: npm install
       - run: mkdir junit
-
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
-
-      - run: 
+      - run:
           command: node_modules/.bin/mocha test --reporter mocha-junit-reporter
           environment:
             MOCHA_FILE: ./junit/test-results.xml
           when: always
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-        
-      - run: npm test
+      - store_test_results:
+          path: ./junit
+      - store_artifacts:
+          path: ./junit
